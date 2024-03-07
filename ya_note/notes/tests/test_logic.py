@@ -13,7 +13,7 @@ User = get_user_model()
 
 
 class TestNoteCreation(TestCase):
-    # Текст заметки понадобится в нескольких местах кода, 
+    # Текст заметки понадобится в нескольких местах кода,
     # поэтому запишем его в атрибуты класса.
     NOTE_TITLE = 'Название заметки'
     NOTE_TEXT = 'Текст заметки'
@@ -122,7 +122,7 @@ class TestNoteEditDelete(TestCase):
             slug=cls.NOTE_SLUG,
             author=cls.user)
 
-        cls.notes_url = reverse('notes:detail', args=(cls.note.slug,))  # Адрес заметки.
+        cls.notes_url = reverse('notes:detail', args=(cls.note.slug,))
         cls.done_url = reverse('notes:success', args=None)
         # Делаем всё то же самое для пользователя-читателя.
         cls.reader = User.objects.create(username='Читатель')
@@ -175,7 +175,8 @@ class TestNoteEditDelete(TestCase):
         self.assertEqual(self.note.slug, self.NEW_NOTE_SLUG)
 
     def test_user_cant_edit_note_of_another_user(self):
-        # Выполняем запрос на редактирование заметки от имени другого пользователя.
+        # Выполняем запрос на редактирование заметки от имени другого
+        # пользователя.
         response = self.reader_client.post(self.edit_url, data=self.form_data)
         # Проверяем, что вернулась 404 ошибка.
         self.assertEqual(response.status_code, HTTPStatus.NOT_FOUND)

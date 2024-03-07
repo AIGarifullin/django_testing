@@ -22,7 +22,8 @@ def test_user_can_create_comment(author_client, author,
     url = reverse('news:detail', args=news_id_for_args)
     # В POST-запросе отправляем данные, полученные из фикстуры form_data:
     response = author_client.post(url, data=form_data)
-    # Проверяем, что был выполнен редирект на страницу успешного добавления заметки:
+    # Проверяем, что был выполнен редирект на страницу успешного добавления
+    # заметки:
     assertRedirects(response, f'{url}#comments')
     # Считаем количество комментариев.
     assert Comment.objects.count() == 1
@@ -62,20 +63,19 @@ def test_user_cant_use_bad_words(author_client,
 def test_author_can_delete_comment(author_client, form_data,
                                    news_id_for_args,
                                    comment_id_for_args):
-    news_url = reverse('news:detail', args=news_id_for_args)  # Адрес новости.
-    url_to_comments = news_url + '#comments'  # Адрес блока с комментариями. 
+    news_url = reverse('news:detail', args=news_id_for_args)   # Адрес новости.
+    url_to_comments = news_url + '#comments'  # Адрес блока с комментариями.
     delete_url = reverse('news:delete', args=comment_id_for_args)
     response = author_client.delete(delete_url)
     assertRedirects(response, url_to_comments)
     assert Comment.objects.count() == 0
 
 
-def test_user_cant_delete_comment_of_another_user(
-          client,
-          reader_client,
-          comment_id_for_args):
+def test_user_cant_delete_comment_of_another_user(client,
+                                                  reader_client,
+                                                  comment_id_for_args):
     # Выполняем запрос на удаление от пользователя-читателя.
-    delete_url = reverse('news:delete', args=comment_id_for_args) 
+    delete_url = reverse('news:delete', args=comment_id_for_args)
     response = client.delete(delete_url)
     response_reader = reader_client.delete(delete_url)
     # Проверяем, что вернулась 404 ошибка.
@@ -92,7 +92,7 @@ def test_author_can_edit_comment(author_client,
                                  form_data):
     # Выполняем запрос на редактирование от имени автора комментария.
     news_url = reverse('news:detail', args=news_id_for_args)  # Адрес новости.
-    url_to_comments = news_url + '#comments'  # Адрес блока с комментариями. 
+    url_to_comments = news_url + '#comments'  # Адрес блока с комментариями.
     edit_url = reverse('news:edit', args=comment_id_for_args)
     form_data['text'] = NEW_COMMENT_TEXT
     response = author_client.post(edit_url, data=form_data)
@@ -107,7 +107,7 @@ def test_user_cant_edit_comment_of_another_user(client,
                                                 comment,
                                                 form_data,
                                                 comment_id_for_args):
-    edit_url = reverse('news:edit', args=comment_id_for_args) 
+    edit_url = reverse('news:edit', args=comment_id_for_args)
     response = client.post(edit_url, data=form_data)
     response_reader = reader_client.post(edit_url, data=form_data)
     # Проверяем, что вернулась 404 ошибка.

@@ -86,5 +86,5 @@ class TestAddEditPage(TestCase):
                 url = reverse(name, args=args)
                 response = self.client.get(url)
                 self.assertIn('form', response.context)
-                # Проверим, что объект формы соответствует нужному классу формы.
+                # Проверим, что объект формы соответствует классу формы.
                 self.assertIsInstance(response.context['form'], NoteForm)

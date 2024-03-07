@@ -13,12 +13,12 @@ from news.models import Comment, News
 
 @pytest.fixture
 # Используем встроенную фикстуру для модели пользователей django_user_model.
-def author(django_user_model):  
+def author(django_user_model):
     return django_user_model.objects.create(username='Автор')
 
 
 @pytest.fixture
-def reader(django_user_model):  
+def reader(django_user_model):
     return django_user_model.objects.create(username='Читатель')
 
 
@@ -33,7 +33,7 @@ def author_client(author):  # Вызываем фикстуру автора.
 @pytest.fixture
 def reader_client(reader):
     client = Client()
-    client.force_login(reader)  # Логиним обычного пользователя-читателя в клиенте.
+    client.force_login(reader)  # Логиним обычного пользователя в клиенте.
     return client
 
 
@@ -45,15 +45,15 @@ def news():
     )
     return news
 
+
 @pytest.fixture
 def all_news():
-    today = datetime.today()  
+    today = datetime.today()
     all_news = [
-        News(
-            title=f'Новость {index}',
-            text='Просто текст.',
-            date=today - timedelta(days=index)
-            )
+        News(title=f'Новость {index}',
+             text='Просто текст.',
+             date=today - timedelta(days=index)
+             )
         for index in range(settings.NEWS_COUNT_ON_HOME_PAGE + 1)
     ]
     return News.objects.bulk_create(all_news)
