@@ -5,6 +5,7 @@ from news.forms import CommentForm
 
 from .conftest import URLS
 
+
 @pytest.mark.django_db
 def test_news_count_order(client, all_news):
     """Проверить пагинацию и сортировку новостей."""
