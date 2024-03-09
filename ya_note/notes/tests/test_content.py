@@ -1,5 +1,5 @@
 from notes.forms import NoteForm
-from .common import BaseTestCase, BaseTestListPage, url
+from .common import BaseTestCase, BaseTestListPage, URLS
 
 
 class TestNoteList(BaseTestCase):
@@ -11,13 +11,13 @@ class TestNoteList(BaseTestCase):
         )
         for client, note_in_list in client_statuses:
             with self.subTest(client=client):
-                response = client.get(url.list)
+                response = client.get(URLS.list)
                 object_list = response.context['object_list']
                 self.assertEqual((self.note in object_list), note_in_list)
 
     def test_authorized_client_has_form(self):
         """Проверить наличие формы у автора заметки."""
-        for name in (url.add, url.edit):
+        for name in (URLS.add, URLS.edit):
             with self.subTest(name=name):
                 response = self.author_client.get(name)
                 self.assertIn('form', response.context)
@@ -27,7 +27,7 @@ class TestNoteList(BaseTestCase):
 class TestListPage(BaseTestListPage):
     def test_notes_order(self):
         """Проверить сортировку заметок."""
-        response = self.author_client.get(url.list)
+        response = self.author_client.get(URLS.list)
         object_list = response.context['object_list']
         all_id = [note.id for note in object_list]
         sorted_id = sorted(all_id)

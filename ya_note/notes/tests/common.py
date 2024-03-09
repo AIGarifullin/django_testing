@@ -21,12 +21,12 @@ form_data = {'title': NOTE_TITLE,
              'text': NOTE_TEXT,
              'slug': NOTE_SLUG}
 
-url_name = namedtuple(
+URL_NAMES = namedtuple(
     'name',
     ['home', 'add', 'edit', 'detail', 'delete',
      'list', 'success', 'login', 'logout', 'signup'])
 
-url = url_name(
+URLS = URL_NAMES(
     reverse('notes:home'),
     reverse('notes:add'),
     reverse('notes:edit', args=(NOTE_SLUG,)),
