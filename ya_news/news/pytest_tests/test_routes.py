@@ -1,29 +1,18 @@
 # test_routes.py
-import pytest
-
 from http import HTTPStatus
 
-from django.urls import reverse
-
+import pytest
 from pytest_django.asserts import assertRedirects
 
+from .conftest import url
 
 @pytest.mark.django_db
 @pytest.mark.parametrize(
-    'name, args',
-    (
-        ('news:home', None),
-        ('news:detail', pytest.lazy_fixture('news_id_for_args')),
-        ('users:login', None),
-        ('users:logout', None),
-        ('users:signup', None),
-    ),
-)
-# Указываем в фикстурах встроенный клиент.
-def test_pages_availability(client, name, args):
-    # Адрес страницы получаем через reverse():
-    url = reverse(name, args=args)
-    response = client.get(url)
+    'name',
+    (url.home, url.detail, url.login, url.logout, url.signup))
+def test_pages_availability(client, name, news):
+    """Проверить доступ страниц для всех пользователей."""
+    response = client.get(name)
     assert response.status_code == HTTPStatus.OK
 
 
@@ -36,26 +25,20 @@ def test_pages_availability(client, name, args):
 )
 @pytest.mark.parametrize(
     'name',
-    ('news:edit', 'news:delete'),
-)
+    (url.edit, url.delete))
 def test_availability_for_comment_edit_and_delete(
-        parametrized_client, name, comment_id_for_args, expected_status
-):
-    url = reverse(name, args=comment_id_for_args)
-    response = parametrized_client.get(url)
+        parametrized_client, name, expected_status, comment):
+    """Проверить доступ страниц редактирования и удаления комментария."""
+    response = parametrized_client.get(name)
     assert response.status_code == expected_status
 
 
 @pytest.mark.django_db
 @pytest.mark.parametrize(
     'name',
-    ('news:edit', 'news:delete'),
-)
-# Передаём в тест анонимный клиент, name проверяемых страниц и args:
-def test_redirect_for_anonymous_client(client, name, comment_id_for_args):
-    login_url = reverse('users:login')
-    # Теперь не надо писать никаких if и можно обойтись одним выражением.
-    url = reverse(name, args=comment_id_for_args)
-    redirect_url = f'{login_url}?next={url}'
-    response = client.get(url)
+    (url.edit, url.delete))
+def test_redirect_for_anonymous_client(client, name):
+    """Проверить редирект анонимного клиента."""
+    redirect_url = f'{url.login}?next={name}'
+    response = client.get(name)
     assertRedirects(response, redirect_url)
