@@ -6,6 +6,7 @@ from pytest_django.asserts import assertRedirects
 
 from .conftest import url
 
+
 @pytest.mark.django_db
 @pytest.mark.parametrize(
     'name',
