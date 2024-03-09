@@ -16,12 +16,12 @@ NEW_COMMENT_TEXT = 'Обновлённый комментарий'
 
 form_data = {'text': COMMENT_TEXT}
 
-url_name = namedtuple(
+URL_NAMES = namedtuple(
     'name',
     ['home', 'detail', 'comments', 'delete',
      'edit', 'login', 'logout', 'signup'])
 
-url = url_name(
+URLS = URL_NAMES(
     reverse('news:home'),
     reverse('news:detail', args=(ID,)),
     reverse('news:detail', args=(ID,)) + '#comments',

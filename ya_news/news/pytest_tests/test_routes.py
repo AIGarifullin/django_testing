@@ -1,16 +1,15 @@
-# test_routes.py
 from http import HTTPStatus
 
 import pytest
 from pytest_django.asserts import assertRedirects
 
-from .conftest import url
+from .conftest import URLS
 
 
 @pytest.mark.django_db
 @pytest.mark.parametrize(
     'name',
-    (url.home, url.detail, url.login, url.logout, url.signup))
+    (URLS.home, URLS.detail, URLS.login, URLS.logout, URLS.signup))
 def test_pages_availability(client, name, news):
     """Проверить доступ страниц для всех пользователей."""
     response = client.get(name)
@@ -26,7 +25,7 @@ def test_pages_availability(client, name, news):
 )
 @pytest.mark.parametrize(
     'name',
-    (url.edit, url.delete))
+    (URLS.edit, URLS.delete))
 def test_availability_for_comment_edit_and_delete(
         parametrized_client, name, expected_status, comment):
     """Проверить доступ страниц редактирования и удаления комментария."""
@@ -37,9 +36,9 @@ def test_availability_for_comment_edit_and_delete(
 @pytest.mark.django_db
 @pytest.mark.parametrize(
     'name',
-    (url.edit, url.delete))
+    (URLS.edit, URLS.delete))
 def test_redirect_for_anonymous_client(client, name):
     """Проверить редирект анонимного клиента."""
-    redirect_url = f'{url.login}?next={name}'
+    redirect_url = f'{URLS.login}?next={name}'
     response = client.get(name)
     assertRedirects(response, redirect_url)
